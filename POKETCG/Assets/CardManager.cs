@@ -132,11 +132,11 @@ private void Awake()
             Instantiate(skill[PlayerPrefs.GetInt("PC", 1)], canvas.transform);
             GameObject a = Instantiate(pc[PlayerPrefs.GetInt("PC", 1)], battleScene.transform);
         }
-        if (isMulti) // 멀티일 경우 상대 플레이어의 스킬과 캐릭터를 instantiate 한다.
-        {
-            Dictionary<string, string> a = new Dictionary<string, string>();
-            socket.Emit("Character", new JSONObject(a));
-        }
+        //if (isMulti) // 멀티일 경우 상대 플레이어의 스킬과 캐릭터를 instantiate 한다.
+        //{
+        //    Dictionary<string, string> a = new Dictionary<string, string>();
+        //    socket.Emit("Character", new JSONObject(a));
+        //}
     }
     private void Start()
     {
@@ -161,10 +161,14 @@ private void Awake()
                 CardNum[haveCard[i]]++;
                 StartCoroutine("RerollCoroutine", i);
             }
-            if (isMulti) // 멀티인데 내 캐릭터일 경우 정보를 서버로 보냄
+            if (isMulti) // 멀티인데 내 캐릭터일 경우 정보를 서버로 보냄 (카드 뭐나왔는지 보내야됨 ^^)
             {
-                Dictionary<string, string> MyCharacter = new Dictionary<string, string>();
-                socket.Emit("Character");
+                Dictionary<string, string> MyCard = new Dictionary<string, string>();
+                MyCard["card0"] = haveCard[0].ToString();
+                MyCard["card1"] = haveCard[1].ToString();
+                MyCard["card2"] = haveCard[2].ToString();
+                MyCard["card3"] = haveCard[3].ToString();
+                socket.Emit("MYCard", new JSONObject(MyCard));
             }
             if (isAi) { // ai일 경우 나온 카드에 따라 사용할 기술을 정해준다.
                 for (int i = ai.cards.Length - 1; i >= 0; i--)
