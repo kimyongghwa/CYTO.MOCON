@@ -3,6 +3,8 @@ using UnityEngine;
 using SocketIO;
 using System;
 using System.Collections.Generic;
+
+
 public class Socketx : MonoBehaviour
 {
     private SocketIOComponent socket;
@@ -13,7 +15,6 @@ public class Socketx : MonoBehaviour
         socket = go.GetComponent<SocketIOComponent>();
 
         socket.On("open", TestOpen);
-        //socket.On("boop", TestBoop);
 
         socket.On("boop", (SocketIOEvent e) => {
             Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));

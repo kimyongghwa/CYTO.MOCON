@@ -1,8 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 using SocketIO;
+//using System;
+using System.Collections.Generic;
 
 public class CardManager : MonoBehaviour
 {
@@ -20,32 +20,111 @@ public class CardManager : MonoBehaviour
     public int[] CardNum = new int[5];
     public Animator[] animator = new Animator[4];
 
-    //private SocketIOComponent socket;
+    private SocketIOComponent socket;
 
-    //public void ServerStart()
-    //{
-    //    GameObject go = GameObject.Find("SocketIO");
-    //    socket = go.GetComponent<SocketIOComponent>();
+    Dictionary<string, string> testdata = new Dictionary<string, string>();
 
-    //    socket.On("open", TestOpen);
-    //    socket.On("Character", Character); //상대 캐릭터 받아옴
-    //    socket.On("Card", Card); //상대 카드 받아옴
-    //    socket.On("Skill", Skill); //상대 스킬 받아옴
-    //    socket.On("close", TestClose);
+    public void StartServer()
+    {
+        GameObject go = GameObject.Find("SocketIO");
+        socket = go.GetComponent<SocketIOComponent>();
 
-    //    //StartCoroutine("Send");
-    //}
+        socket.On("open", Open);
 
-    //private IEnumerator Send()
-    //{
-    //    socket.Emit("Character");
-    //    socket.Emit("Card");
-    //    socket.Emit("Skill");
-    //}
+        socket.On("boop", (SocketIOEvent e) => {    
+            Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
+            testdata["email"] = "email.com";
+            testdata["pass"] = "1234";
+            socket.Emit("user:login", new JSONObject(testdata));
+            Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
+        });
+
+        socket.On("receive", (SocketIOEvent e) => {
+            Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
+            testdata["email"] = "aa@email.com";
+            testdata["pass"] = "aa";
+            //socket.Emit("user:login", new JSONObject(testdata));
+            Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
+        });
+
+        socket.On("error", Error);
+        socket.On("close", Close);
+
+        StartCoroutine("BeepBoop");
+    }
+
+    private IEnumerator BeepBoop()
+    {
+        // wait 1 seconds and continue
+        yield return new WaitForSeconds(1);
+
+        socket.Emit("beep");
+
+        // wait 3 seconds and continue
+        yield return new WaitForSeconds(3);
+
+        socket.Emit("beep");
+
+        // wait 2 seconds and continue
+        yield return new WaitForSeconds(2);
+
+        socket.Emit("beep");
+
+        // wait ONE FRAME and continue
+        yield return null;
+
+        socket.Emit("beep");
+        socket.Emit("beep");
+    }
+
+    public void Open(SocketIOEvent e)
+    {
+        Debug.Log("SocketIO Open received: " + e.name + " " + e.data);
+    }
+
+
+    public void Charecter(SocketIOEvent e)
+    {
+        testdata["email"] = "email.com";
+        testdata["pass"] = "1234";
+        socket.Emit("user:login", new JSONObject(testdata));
+        Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
+
+    }
+
+    public void Card(SocketIOEvent e)
+    {
+        testdata["email"] = "email.com";
+        testdata["pass"] = "1234";
+        socket.Emit("user:login", new JSONObject(testdata));
+        Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
+
+    }
+
+    public void Skill(SocketIOEvent e)
+    {
+        testdata["email"] = "email.com";
+        testdata["pass"] = "1234";
+        socket.Emit("user:login", new JSONObject(testdata));
+        Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
+
+    }
 
 
 
-    private void Awake()
+
+    public void Error(SocketIOEvent e)
+    {
+        Debug.Log("SocketIO Error received: " + e.name + " " + e.data);
+    }
+
+    public void Close(SocketIOEvent e)
+    {
+        Debug.Log("SocketIO Close received: " + e.name + " " + e.data);
+    }
+
+
+private void Awake()
     {
         if (!isAi && !isMultiEneme)
         {
@@ -55,7 +134,8 @@ public class CardManager : MonoBehaviour
         }
         if (isMulti) // 멀티일 경우 상대 플레이어의 스킬과 캐릭터를 instantiate 한다.
         {
-            //socket.Emit("CharacterE");
+            Dictionary<string, string> a = new Dictionary<string, string>();
+            socket.Emit("Character", new JSONObject(a));
         }
     }
     private void Start()
@@ -66,7 +146,8 @@ public class CardManager : MonoBehaviour
     {
         if (isMultiEneme) // 서버에서 상대카드정보를 불러와야함
         {
-
+            Dictionary<string, string>b = new Dictionary<string, string>();
+            socket.Emit("Card");
         }
         else {
             for (int i = 1; i < 5; i++)
@@ -82,7 +163,8 @@ public class CardManager : MonoBehaviour
             }
             if (isMulti) // 멀티인데 내 캐릭터일 경우 정보를 서버로 보냄
             {
-
+                Dictionary<string, string> MyCharacter = new Dictionary<string, string>();
+                socket.Emit("Character");
             }
             if (isAi) { // ai일 경우 나온 카드에 따라 사용할 기술을 정해준다.
                 for (int i = ai.cards.Length - 1; i >= 0; i--)
@@ -102,6 +184,7 @@ public class CardManager : MonoBehaviour
         }
         BattleManager.Instance.EnemeCard = ai.cards[i];
     }
+
 
    public void Click()
     {
@@ -203,41 +286,7 @@ public class CardManager : MonoBehaviour
         p1.transform.localRotation = Quaternion.Euler(0, 270, 0);
         yield return new WaitForSeconds(0.03f);
         p1.transform.localRotation = Quaternion.Euler(0, 360, 0);
-    }
-
-
-
-
-
-    //public void TestOpen(SocketIOEvent e)
-    //{
-    //    Debug.Log("SocketIO Open received: " + e.name + " " + e.data);
-    //}
-    
-    //public void Character(SocketIOEvent e)
-    //{
-    //    Debug.Log("SocketIO Character received: " + e.name + " " + e.data);
-    //}
-
-    //public void Card(SocketIOEvent e)
-    //{
-    //    Debug.Log("SocketIO Card received: " + e.name + " " + e.data);
-
-    //    //if (e.data == null) { return; }
-
-    //    //Debug.Log(
-    //    //    "#####################################################" +
-    //    //    "THIS: " + e.data.GetField("this").str +
-    //    //    "#####################################################"
-    //    //);
-    //}
-
-    //public void Skill(SocketIOEvent e)
-    //{
-    //    Debug.Log("SocketIO Skill received: " + e.name + " " + e.data);
-    //}
-    //public void TestClose(SocketIOEvent e)
-    //{
-    //    Debug.Log("SocketIO Close received: " + e.name + " " + e.data);
-    //}
+    }  
 }
+
+
