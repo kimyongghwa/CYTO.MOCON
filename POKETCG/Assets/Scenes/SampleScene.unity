@@ -1428,6 +1428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 749160895}
+  - component: {fileID: 749160896}
   - component: {fileID: 749160894}
   m_Layer: 0
   m_Name: Socketx
@@ -1462,6 +1463,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &749160896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749160893}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1937b7e33709c4396210743f813c9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pc:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  skill:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  gg: {fileID: 0}
+  de: {fileID: 0}
+  battleScene: {fileID: 0}
+  isAi: 0
+  isMulti: 0
+  isMultiEneme: 0
+  haveCard: 00000000000000000000000000000000
+  ai: {fileID: 0}
+  CardNum: 0000000000000000000000000000000000000000
+  animator:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &759069427
 GameObject:
   m_ObjectHideFlags: 0

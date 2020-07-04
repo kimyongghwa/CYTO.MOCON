@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using SocketIO;
+
 public class CardManager : MonoBehaviour
 {
     public GameObject[] pc = new GameObject[3];
@@ -17,6 +19,32 @@ public class CardManager : MonoBehaviour
     public AISkill ai;
     public int[] CardNum = new int[5];
     public Animator[] animator = new Animator[4];
+
+    //private SocketIOComponent socket;
+
+    //public void ServerStart()
+    //{
+    //    GameObject go = GameObject.Find("SocketIO");
+    //    socket = go.GetComponent<SocketIOComponent>();
+
+    //    socket.On("open", TestOpen);
+    //    socket.On("Character", Character); //상대 캐릭터 받아옴
+    //    socket.On("Card", Card); //상대 카드 받아옴
+    //    socket.On("Skill", Skill); //상대 스킬 받아옴
+    //    socket.On("close", TestClose);
+
+    //    //StartCoroutine("Send");
+    //}
+
+    //private IEnumerator Send()
+    //{
+    //    socket.Emit("Character");
+    //    socket.Emit("Card");
+    //    socket.Emit("Skill");
+    //}
+
+
+
     private void Awake()
     {
         if (!isAi && !isMultiEneme)
@@ -27,7 +55,7 @@ public class CardManager : MonoBehaviour
         }
         if (isMulti) // 멀티일 경우 상대 플레이어의 스킬과 캐릭터를 instantiate 한다.
         {
-
+            //socket.Emit("CharacterE");
         }
     }
     private void Start()
@@ -176,4 +204,40 @@ public class CardManager : MonoBehaviour
         yield return new WaitForSeconds(0.03f);
         p1.transform.localRotation = Quaternion.Euler(0, 360, 0);
     }
+
+
+
+
+
+    //public void TestOpen(SocketIOEvent e)
+    //{
+    //    Debug.Log("SocketIO Open received: " + e.name + " " + e.data);
+    //}
+    
+    //public void Character(SocketIOEvent e)
+    //{
+    //    Debug.Log("SocketIO Character received: " + e.name + " " + e.data);
+    //}
+
+    //public void Card(SocketIOEvent e)
+    //{
+    //    Debug.Log("SocketIO Card received: " + e.name + " " + e.data);
+
+    //    //if (e.data == null) { return; }
+
+    //    //Debug.Log(
+    //    //    "#####################################################" +
+    //    //    "THIS: " + e.data.GetField("this").str +
+    //    //    "#####################################################"
+    //    //);
+    //}
+
+    //public void Skill(SocketIOEvent e)
+    //{
+    //    Debug.Log("SocketIO Skill received: " + e.name + " " + e.data);
+    //}
+    //public void TestClose(SocketIOEvent e)
+    //{
+    //    Debug.Log("SocketIO Close received: " + e.name + " " + e.data);
+    //}
 }
