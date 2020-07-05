@@ -22,10 +22,13 @@ public class CardManager : MonoBehaviour
 
     public int keyidx = 0;
     Dictionary<string, string> key = new Dictionary<string, string>();
+    Dictionary<string, string> sid = new Dictionary<string, string>();
 
     private SocketIOComponent socket;
 
     Dictionary<string, string> testdata = new Dictionary<string, string>();
+
+
 
     public void StartServer()
     {
@@ -47,12 +50,12 @@ public class CardManager : MonoBehaviour
 
         socket.On("OpponentCard", (SocketIOEvent e) => {
             Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
-           //상대 카드를 받아오는거 딕셔너리로 e에 있음 아마
+            //상대 카드를 딕셔너리로 받아오는거  e에 있음 아마
         });
 
         socket.On("OpponentCharacter", (SocketIOEvent e) => {
             Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
-            //상대 캐릭터를 받아오는거 딕셔너리로 e에 있음 아마
+            //상대 캐릭터를 딕셔너리로 받아오는거  e에 있음 아마
         });
 
         socket.On("error", Error);
@@ -87,7 +90,6 @@ public class CardManager : MonoBehaviour
 
     public void OnSocketOpen(SocketIOEvent ev)
     {
-        Dictionary<string, string> sid = new Dictionary<string, string>();
         Debug.Log("updated socket id " + socket.sid);
         sid["sid"] = socket.sid;
         sid["key"] = keyidx.ToString();
@@ -104,8 +106,6 @@ public class CardManager : MonoBehaviour
 
     public void Close(SocketIOEvent e)
     {
-        key["key"] = keyidx.ToString();
-        socket.Emit("leaveRoom", new JSONObject(key));
         Debug.Log("SocketIO Close received: " + e.name + " " + e.data);
     }
 
@@ -130,6 +130,7 @@ private void Awake()
         {
             Dictionary<string, string> MyCharacter = new Dictionary<string, string>();
             MyCharacter["number"] = PlayerPrefs.GetInt("PC").ToString();  //PlayerPrefs.GetInt("PC").ToString(); 이거 캐릭터번호 맞나
+            MyCharacter["key"] = keyidx.ToString();
             socket.Emit("MyCharacter",new JSONObject(MyCharacter));
         }
     }
@@ -163,6 +164,7 @@ private void Awake()
                 MyCard["card1"] = haveCard[1].ToString();
                 MyCard["card2"] = haveCard[2].ToString();
                 MyCard["card3"] = haveCard[3].ToString();
+                MyCard["key"] = keyidx.ToString();
                 socket.Emit("MyCard", new JSONObject(MyCard));
             }
             if (isAi) { // ai일 경우 나온 카드에 따라 사용할 기술을 정해준다.

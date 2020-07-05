@@ -70,7 +70,9 @@ io.on('connection', socket=>{
 	  });
 	
 	
-	socket.on('leaveRoom', key => {
+	socket.on('leaveRoom', keydata => {
+		key=keydata['key']
+		console.log(keydata)
 		socket.leave(room[key], () => {
 			console.log(id+' leave ' + room[key]);
 			//io.to(room[key]).emit('leaveRoom', {'key':key});
@@ -84,12 +86,14 @@ io.on('connection', socket=>{
 
 	socket.on('MyCard',data=>{
 		console.log(data)
+		key = data['key']
 		socket.broadcast.to(room[key]).emit('OpponentCard',data) 
 	})
 
 
 	socket.on('MyCharacter',data=>{
 		console.log(data)
+		key = data['key']
 		socket.broadcast.to(room[key]).emit('OpponentCharacter',data) 
 	})
 })
