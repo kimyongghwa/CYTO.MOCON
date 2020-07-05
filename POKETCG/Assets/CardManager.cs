@@ -20,6 +20,9 @@ public class CardManager : MonoBehaviour
     public int[] CardNum = new int[5];
     public Animator[] animator = new Animator[4];
 
+    public int keyidx = 0;
+    Dictionary<string, string> key = new Dictionary<string, string>();
+
     private SocketIOComponent socket;
 
     Dictionary<string, string> testdata = new Dictionary<string, string>();
@@ -29,64 +32,70 @@ public class CardManager : MonoBehaviour
         GameObject go = GameObject.Find("SocketIO");
         socket = go.GetComponent<SocketIOComponent>();
 
-        socket.On("open", Open);
+        socket.On("open", OnSocketOpen);
 
-        socket.On("boop", (SocketIOEvent e) => {    
-            Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
-            testdata["email"] = "email.com";
-            testdata["pass"] = "1234";
-            socket.Emit("user:login", new JSONObject(testdata));
-            Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
-        });
+        //socket.On("joinRoom", (SocketIOEvent e) => {
+        //    Debug.Log(string.Format("{sid: {0}, data: {1}}", e.name, e.data));
+        //    Debug.Log("adsf");
+        //});
 
         socket.On("receive", (SocketIOEvent e) => {
-            Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
+            Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
             testdata["email"] = "aa@email.com";
             testdata["pass"] = "aa";
             //socket.Emit("user:login", new JSONObject(testdata));
-            Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
+            Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
+        });
+
+        socket.On("Opponentcard", (SocketIOEvent e) => {
+            Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
+            
         });
 
         socket.On("error", Error);
         socket.On("close", Close);
 
-        StartCoroutine("BeepBoop");
+        //StartCoroutine("BeepBoop");
     }
 
-    private IEnumerator BeepBoop()
+    //private IEnumerator BeepBoop()
+    //{
+    //    // wait 1 seconds and continue
+    //    yield return new WaitForSeconds(1);
+
+    //    socket.Emit("beep");
+
+    //    // wait 3 seconds and continue
+    //    yield return new WaitForSeconds(3);
+
+    //    socket.Emit("beep");
+
+    //    // wait 2 seconds and continue
+    //    yield return new WaitForSeconds(2);
+
+    //    socket.Emit("beep");
+
+    //    // wait ONE FRAME and continue
+    //    yield return null;
+
+    //    socket.Emit("beep");
+    //    socket.Emit("beep");
+    //}
+
+    public void OnSocketOpen(SocketIOEvent ev)
     {
-        // wait 1 seconds and continue
-        yield return new WaitForSeconds(1);
-
-        socket.Emit("beep");
-
-        // wait 3 seconds and continue
-        yield return new WaitForSeconds(3);
-
-        socket.Emit("beep");
-
-        // wait 2 seconds and continue
-        yield return new WaitForSeconds(2);
-
-        socket.Emit("beep");
-
-        // wait ONE FRAME and continue
-        yield return null;
-
-        socket.Emit("beep");
-        socket.Emit("beep");
-    }
-
-    public void Open(SocketIOEvent e)
-    {
-        Debug.Log("SocketIO Open received: " + e.name + " " + e.data);
+        Dictionary<string, string> sid = new Dictionary<string, string>();
+        Debug.Log("updated socket id " + socket.sid);
+        sid["sid"] = socket.sid;
+        sid["key"] = keyidx.ToString();
+        socket.Emit("joinRoom", new JSONObject(sid));
     }
 
 
     public void Charecter(SocketIOEvent e)
     {
-        testdata["email"] = "email.com";
-        testdata["pass"] = "1234";
+        testdata["email"] = "a";
+        testdata["pass"] = "1a";
         socket.Emit("user:login", new JSONObject(testdata));
         Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
 
@@ -94,8 +103,8 @@ public class CardManager : MonoBehaviour
 
     public void Card(SocketIOEvent e)
     {
-        testdata["email"] = "email.com";
-        testdata["pass"] = "1234";
+        testdata["email"] = "aa";
+        testdata["pass"] = "a";
         socket.Emit("user:login", new JSONObject(testdata));
         Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
 
@@ -103,8 +112,8 @@ public class CardManager : MonoBehaviour
 
     public void Skill(SocketIOEvent e)
     {
-        testdata["email"] = "email.com";
-        testdata["pass"] = "1234";
+        testdata["email"] = "a";
+        testdata["pass"] = "a";
         socket.Emit("user:login", new JSONObject(testdata));
         Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
 
@@ -121,22 +130,34 @@ public class CardManager : MonoBehaviour
     public void Close(SocketIOEvent e)
     {
         Debug.Log("SocketIO Close received: " + e.name + " " + e.data);
+        
+        key["key"] = keyidx.ToString();   
+        socket.Emit("leaveRoom", new JSONObject(key));
+
     }
 
 
 private void Awake()
     {
+        if (isMulti && !isMultiEneme)
+            StartServer();
+        else if (isMultiEneme)
+        {
+            GameObject go = GameObject.Find("SocketIO");
+            socket = go.GetComponent<SocketIOComponent>();
+        }
+
         if (!isAi && !isMultiEneme)
         {
             canvas = GameObject.Find("Canvas");
             Instantiate(skill[PlayerPrefs.GetInt("PC", 1)], canvas.transform);
             GameObject a = Instantiate(pc[PlayerPrefs.GetInt("PC", 1)], battleScene.transform);
         }
-        //if (isMulti) // 멀티일 경우 상대 플레이어의 스킬과 캐릭터를 instantiate 한다.
-        //{
-        //    Dictionary<string, string> a = new Dictionary<string, string>();
-        //    socket.Emit("Character", new JSONObject(a));
-        //}
+        if (isMulti) // 멀티일 경우 상대 플레이어의 스킬과 캐릭터를 instantiate 한다.
+        {
+            Dictionary<string, string> a = new Dictionary<string, string>();
+            socket.Emit("Character", new JSONObject(a));
+        }
     }
     private void Start()
     {
@@ -147,7 +168,7 @@ private void Awake()
         if (isMultiEneme) // 서버에서 상대카드정보를 불러와야함
         {
             Dictionary<string, string>b = new Dictionary<string, string>();
-            socket.Emit("Card");
+            
         }
         else {
             for (int i = 1; i < 5; i++)
@@ -168,7 +189,7 @@ private void Awake()
                 MyCard["card1"] = haveCard[1].ToString();
                 MyCard["card2"] = haveCard[2].ToString();
                 MyCard["card3"] = haveCard[3].ToString();
-                socket.Emit("MYCard", new JSONObject(MyCard));
+                socket.Emit("MyCard", new JSONObject(MyCard));
             }
             if (isAi) { // ai일 경우 나온 카드에 따라 사용할 기술을 정해준다.
                 for (int i = ai.cards.Length - 1; i >= 0; i--)
