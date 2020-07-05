@@ -43,19 +43,14 @@ io.on('connection', socket=>{
 		//console.log(userlist.users[3])
 		// 앞에서 둘씩 잘라서 room에 넣음
 		socket.join(room[key], () => {
-			console.log(' join a ' + room[key]);
-			console.log(id)
+			console.log(id +' join ' + room[key]);
 			//io.to(room[key]).emit('joinRoom',{'key':key});
-		  });
+		});
+
 		// if(userlist.users.length()==2*key){
 		// 	key++
 		// }
 		
-		//  socket.emit("joinRoom",
-		//  {
-		// 	'sid':id,
-		//  	'key':key
-		//  })
 	})
 
 	// socket.on("boomRoom", data => {
@@ -77,34 +72,26 @@ io.on('connection', socket=>{
 	
 	socket.on('leaveRoom', key => {
 		socket.leave(room[key], () => {
-			console.log('leave a ' + room[key]);
-			console.log(id)
+			console.log(id+' leave ' + room[key]);
 			//io.to(room[key]).emit('leaveRoom', {'key':key});
 		});
 	});
 
-	socket.on('Character',CharacterData=>{
-		socket.emit('Character',CharacterData);
-	});
+	// socket.on('user:login',data=>{
+	// 	console.log(data)
+	// 	socket.emit('receive',data)
+	// })
 
-	socket.on('Skill', data=>{
-		socket.emit('Skill');
-	});
-
-	socket.on('beep',()=>{
-		socket.emit('boop');
-	});
-
-	socket.on('user:login',data=>{
+	socket.on('MyCard',data=>{
 		console.log(data)
-		socket.emit('receive',data)
+		socket.broadcast.to(room[key]).emit('OpponentCard',data) 
 	})
 
-	socket.on('Mycard',data=>{
-		console.log(data)
-		socket.emit('Opponentcard',data)
-	})
 
+	socket.on('MyCharacter',data=>{
+		console.log(data)
+		socket.broadcast.to(room[key]).emit('OpponentCharacter',data) 
+	})
 })
 
 

@@ -43,13 +43,16 @@ public class CardManager : MonoBehaviour
             Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
             testdata["email"] = "aa@email.com";
             testdata["pass"] = "aa";
-            //socket.Emit("user:login", new JSONObject(testdata));
-            Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
         });
 
-        socket.On("Opponentcard", (SocketIOEvent e) => {
+        socket.On("OpponentCard", (SocketIOEvent e) => {
             Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
-            
+           //상대 카드를 받아오는거 딕셔너리로 e에 있음 아마
+        });
+
+        socket.On("OpponentCharacter", (SocketIOEvent e) => {
+            Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
+            //상대 캐릭터를 받아오는거 딕셔너리로 e에 있음 아마
         });
 
         socket.On("error", Error);
@@ -92,34 +95,6 @@ public class CardManager : MonoBehaviour
     }
 
 
-    public void Charecter(SocketIOEvent e)
-    {
-        testdata["email"] = "a";
-        testdata["pass"] = "1a";
-        socket.Emit("user:login", new JSONObject(testdata));
-        Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
-
-    }
-
-    public void Card(SocketIOEvent e)
-    {
-        testdata["email"] = "aa";
-        testdata["pass"] = "a";
-        socket.Emit("user:login", new JSONObject(testdata));
-        Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
-
-    }
-
-    public void Skill(SocketIOEvent e)
-    {
-        testdata["email"] = "a";
-        testdata["pass"] = "a";
-        socket.Emit("user:login", new JSONObject(testdata));
-        Debug.Log(string.Format("[name: {0}, testdata: {1}]", e.name, e.data));
-
-    }
-
-
 
 
     public void Error(SocketIOEvent e)
@@ -129,11 +104,9 @@ public class CardManager : MonoBehaviour
 
     public void Close(SocketIOEvent e)
     {
-        Debug.Log("SocketIO Close received: " + e.name + " " + e.data);
-        
-        key["key"] = keyidx.ToString();   
+        key["key"] = keyidx.ToString();
         socket.Emit("leaveRoom", new JSONObject(key));
-
+        Debug.Log("SocketIO Close received: " + e.name + " " + e.data);
     }
 
 
@@ -155,8 +128,9 @@ private void Awake()
         }
         if (isMulti) // 멀티일 경우 상대 플레이어의 스킬과 캐릭터를 instantiate 한다.
         {
-            Dictionary<string, string> a = new Dictionary<string, string>();
-            socket.Emit("Character", new JSONObject(a));
+            Dictionary<string, string> MyCharacter = new Dictionary<string, string>();
+            MyCharacter["number"] = PlayerPrefs.GetInt("PC").ToString();  //PlayerPrefs.GetInt("PC").ToString(); 이거 캐릭터번호 맞나
+            socket.Emit("MyCharacter",new JSONObject(MyCharacter));
         }
     }
     private void Start()

@@ -1289,6 +1289,7 @@ MonoBehaviour:
   - {fileID: 578292848}
   - {fileID: 1677790115}
   - {fileID: 481853849}
+  keyidx: 0
 --- !u!4 &692251647
 Transform:
   m_ObjectHideFlags: 0
@@ -1615,6 +1616,7 @@ MonoBehaviour:
   - {fileID: 856619037}
   - {fileID: 976330888}
   - {fileID: 2008805517}
+  keyidx: 0
 --- !u!4 &784065042
 Transform:
   m_ObjectHideFlags: 0
