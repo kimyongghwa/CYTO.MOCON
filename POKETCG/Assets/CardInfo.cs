@@ -9,6 +9,7 @@ public class CardInfo : MonoBehaviour
     public Color color;
     public bool enemeCard;
     CardManager cm;
+    CardManager csm; // socket 처리
     public int[] cost = new int[5];
     public int damage;
     public int getArmor;
@@ -20,15 +21,20 @@ public class CardInfo : MonoBehaviour
 
     public void Click()
     {
-        for(int i = 1; i<5; i++)
+        for (int i = 1; i < 5; i++)
         {
-            if (cost[i] >cm.CardNum[i])
+            if (cost[i] > cm.CardNum[i])
                 return;
         }
-        if(!enemeCard)
+        if (!enemeCard)
+        {
             BattleManager.Instance.Card = this;
+            if (cm.isMulti)
+                csm.SendSkill(this.name);
+        }
         else
             BattleManager.Instance.EnemeCard = this;
+
     }
 
     public void Awake()
@@ -37,6 +43,7 @@ public class CardInfo : MonoBehaviour
             cm = GameObject.Find("Manager").GetComponent<CardManager>();
         else
             cm = GameObject.Find("EnemeCardManager").GetComponent<CardManager>();
+        csm = GameObject.Find("Manager").GetComponent<CardManager>();
     }
     public void Update()
     {

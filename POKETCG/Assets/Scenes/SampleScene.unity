@@ -1271,6 +1271,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 3536590953862114427, guid: 552d4ee69c69f8e4e8f332536854fcae, type: 3}
   - {fileID: 2546124269558817572, guid: b1b085672cdbe764eabab191e0b8ddb1, type: 3}
+  eneme:
+  - {fileID: 0}
+  - {fileID: 8325686993488463170, guid: dee561b21edfe804c98efc164798b16c, type: 3}
+  - {fileID: 2711081748881587763, guid: 1b463c7167540944281b721431c10fd8, type: 3}
+  eskill:
+  - {fileID: 0}
+  - {fileID: 1624613843530662990, guid: 4dc7d5b34435cde4899a8cf4a88aa0a4, type: 3}
+  - {fileID: 584800201575945867, guid: 56b0f17ca26b4ca4a8c1efcb0f158079, type: 3}
   skill:
   - {fileID: 5616108416678383291, guid: 555930db11038c14cb82737e2a090257, type: 3}
   - {fileID: 842579133654574710, guid: 91caff9b2aa8c54428dd599ad94a7a45, type: 3}
@@ -1289,6 +1297,7 @@ MonoBehaviour:
   - {fileID: 578292848}
   - {fileID: 1677790115}
   - {fileID: 481853849}
+  keyidx: 0
 --- !u!4 &692251647
 Transform:
   m_ObjectHideFlags: 0
@@ -1443,7 +1452,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749160893}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f836b347a5c2475409e8dc27944e1256, type: 3}
   m_Name: 
@@ -1597,6 +1606,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  eneme:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  eskill:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   skill:
   - {fileID: 0}
   - {fileID: 0}
@@ -1604,9 +1621,9 @@ MonoBehaviour:
   gg: {fileID: 0}
   de: {fileID: 0}
   battleScene: {fileID: 0}
-  isAi: 1
+  isAi: 0
   isMulti: 0
-  isMultiEneme: 0
+  isMultiEneme: 1
   haveCard: 00000000000000000000000000000000
   ai: {fileID: 3154761404480282881}
   CardNum: 0000000000000000000000000000000000000000
@@ -1615,6 +1632,7 @@ MonoBehaviour:
   - {fileID: 856619037}
   - {fileID: 976330888}
   - {fileID: 2008805517}
+  keyidx: 0
 --- !u!4 &784065042
 Transform:
   m_ObjectHideFlags: 0
@@ -3187,6 +3205,10 @@ PrefabInstance:
     - target: {fileID: 11400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 3}
       propertyPath: url
       value: ws://127.0.0.1:4445/socket.io/?EIO=4&transport=websocket
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 3}
+      propertyPath: autoConnect
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 3}
