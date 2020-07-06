@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using SocketIO;
-//using System;
+using System; //using System;
 using System.Collections.Generic;
 
 public class CardManager : MonoBehaviour
@@ -37,16 +37,9 @@ public class CardManager : MonoBehaviour
 
         socket.On("open", OnSocketOpen);
 
-        //socket.On("joinRoom", (SocketIOEvent e) => {
-        //    Debug.Log(string.Format("{sid: {0}, data: {1}}", e.name, e.data));
-        //    Debug.Log("adsf");
-        //});
+        socket.On("joinRoom", joinRoom);
 
-        socket.On("receive", (SocketIOEvent e) => {
-            Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
-            testdata["email"] = "aa@email.com";
-            testdata["pass"] = "aa";
-        });
+
 
         socket.On("OpponentCard", (SocketIOEvent e) => {
             Debug.Log(string.Format("[name: {0}, data: {1}]", e.name, e.data));
@@ -96,12 +89,17 @@ public class CardManager : MonoBehaviour
         socket.Emit("joinRoom", new JSONObject(sid));
     }
 
-
+    public void joinRoom(SocketIOEvent e)
+    {
+        Debug.Log("adsf");
+        Debug.Log(e.name+"||||" +e.data);
+    }
+    
 
 
     public void Error(SocketIOEvent e)
     {
-        Debug.Log("SocketIO Error received: " + e.name + " " + e.data);
+        Debug.Log("SocketIO Error received: " + e.name + "||" + e.data);
     }
 
     public void Close(SocketIOEvent e)
@@ -153,7 +151,7 @@ private void Awake()
             for (int i = 0; i < 4; i++)
             {
                 animator[i].SetInteger("CardType", 0);
-                haveCard[i] = Random.Range(1, 5);
+                haveCard[i] = UnityEngine.Random.Range(1, 5); //haveCard[i] = Random.Range(1, 5);
                 CardNum[haveCard[i]]++;
                 StartCoroutine("RerollCoroutine", i);
             }

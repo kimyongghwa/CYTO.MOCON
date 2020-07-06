@@ -25,6 +25,7 @@ let room = ['room1','room2','room3','room4','room5','room6','room7','room8','roo
 //     }
 // }
 io.on('connection', socket=>{
+	
 	socket.on("joinRoom",sid=> {
 		id = sid['sid']
 		key= sid["key"]
@@ -42,9 +43,13 @@ io.on('connection', socket=>{
 		//console.log(userlist.users[2])
 		//console.log(userlist.users[3])
 		// 앞에서 둘씩 잘라서 room에 넣음
+		console.log(sid)
 		socket.join(room[key], () => {
 			console.log(id +' join ' + room[key]);
-			//io.to(room[key]).emit('joinRoom',{'key':key});
+			//io.to(room[key]).emit('joinRoom',{'key':key}); room 전체
+			//socket.broadcast.to(room[key]).emit('joinRoom',{'key':key}); room에 나 뺀 애들한테
+			socket.emit('joinRoom',{'key':key})
+			console.log({'key':key})
 		});
 
 		// if(userlist.users.length()==2*key){

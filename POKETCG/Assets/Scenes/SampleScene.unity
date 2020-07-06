@@ -3190,6 +3190,10 @@ PrefabInstance:
       propertyPath: url
       value: ws://127.0.0.1:4445/socket.io/?EIO=4&transport=websocket
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 3}
+      propertyPath: autoConnect
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 3}
 --- !u!1 &2113565899
